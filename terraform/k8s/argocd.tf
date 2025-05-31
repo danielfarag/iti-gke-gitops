@@ -20,7 +20,7 @@ resource "kubernetes_manifest" "backend_app" {
     spec = {
       project = "default"
       source = {
-        repoURL        = "git@github.com:danielfarag/iti-gke-gitops-capstone.git"
+        repoURL        = "git@github.com:danielfarag/iti-gke-gitops.git"
         targetRevision = "main"
         path           = "cd/backend"
       }
@@ -63,7 +63,7 @@ resource "kubernetes_manifest" "frontend_app" {
     spec = {
       project = "default"
       source = {
-        repoURL        = "git@github.com:danielfarag/iti-gke-gitops-capstone.git"
+        repoURL        = "git@github.com:danielfarag/iti-gke-gitops.git"
         targetRevision = "main"
         path           = "cd/frontend"
       }
