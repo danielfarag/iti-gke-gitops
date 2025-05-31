@@ -1,0 +1,23 @@
+controller:
+  serviceType: LoadBalancer
+  servicePort: 80
+  admin:
+    password: password
+  additionalPlugins: 
+  # - workflow-aggregator
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: "topology.kubernetes.io/zone"
+                operator: "In"
+                values:
+                  - "us-central1-b"
+
+persistence:
+  enabled: true
+  storageClass: manual   
+  size: 10Gi
+  accessMode: ReadWriteMany

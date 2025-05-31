@@ -1,0 +1,11 @@
+config:
+  registries:
+    - name: Google Artifacts Registry - us-east4
+      api_url: https://us-central1-docker.pkg.dev
+      prefix: us-central1-docker.pkg.dev
+      credentials: secret:argocd/my-gcr-secret#.dockerconfigjson
+      ping: no
+
+    # - name: my-gcr-secret 
+    #   api_url: https://us-east1-docker.pkg.dev
+    #   credentials: secret:argocd/my-gcr-secret#.dockerconfigjson
