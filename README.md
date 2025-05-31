@@ -1,7 +1,7 @@
 ## Automated Infrastructure and Application Deployment on GCP using Terraform, Github Actions and ArgoCD
 
 This repository contains Terraform configurations for deploying a Google Kubernetes Engine (GKE) cluster, its supporting infrastructure (VPC, Cloud SQL, Artifact Registry), and essential applications (ArgoCD, ArgoCD Image Updater) using Helm. It also configures ArgoCD Applications for backend and frontend services.
-
+![alt text](images/1.png)
 -----
 
 ## Prerequisites
@@ -26,14 +26,16 @@ Before you begin, ensure you have the following:
           * `project_id`: Your Google Cloud project ID.
           * `region`: The Google Cloud region for resource deployment.
           * `cluster_name`: The name of your GKE cluster.
-
+  ![alt text](images/github-vars-1.png) 
+  ![alt text](images/github-vars-2.png)
 -----
 ## GitHub Actions Workflows
 
 This repository includes several GitHub Actions workflows to automate the build, push, and deployment processes.
-
+![alt text](images/github-pipeline-1.png)
+![alt text](images/github-pipeline-2.png)
 ### 1\. Backend Pipeline (`.github/workflows/backend-pipeline.yaml`)
-
+![alt text](images/backend-pipeline.png)
   * **Trigger:** On `push` to the `main` branch when changes occur within the `backend/**` path.
   * **Purpose:** Builds the Docker image for the backend application and pushes it to Google Artifact Registry.
   * **Steps:**
@@ -45,7 +47,7 @@ This repository includes several GitHub Actions workflows to automate the build,
       * Pushes the images to Google Artifact Registry.
 
 ### 2\. Frontend Pipeline (`.github/workflows/frontend-pipeline.yaml`)
-
+![alt text](images/frontend-pipeline.png)
   * **Trigger:** On `push` to the `main` branch when changes occur within the `frontend/**` path.
   * **Purpose:** Builds the Docker image for the frontend application and pushes it to Google Artifact Registry.
   * **Steps:**
@@ -71,7 +73,7 @@ This repository includes several GitHub Actions workflows to automate the build,
       * Includes `terraform destroy` steps for `k8s`, `helm`, and `infra` modules when `destroy` action is selected. **Note:** The destroy steps are ordered from innermost to outermost dependency (k8s -\> helm -\> infra).
 
 ### 4\. Infrastructure Helm Pipeline (`.github/workflows/infra-helm-pipeline.yaml`)
-
+![alt text](images/helm-pipeline.png)
   * **Trigger:**
       * On `workflow_dispatch` (manual trigger) with an `action` input (`apply` or `destroy`).
       * On `push` to the `main` branch when changes occur within the `terraform/helm/**` path.
@@ -85,7 +87,6 @@ This repository includes several GitHub Actions workflows to automate the build,
       * Includes `terraform destroy` steps for `k8s` and `helm` modules when `destroy` action is selected.
 
 ### 5\. Infrastructure K8s Pipeline (`.github/workflows/infra-k8s-pipeline.yaml`)
-
   * **Trigger:**
       * On `workflow_dispatch` (manual trigger) with an `action` input (`apply` or `destroy`).
       * On `push` to the `main` branch when changes occur within the `terraform/k8s/**` path.
@@ -144,7 +145,10 @@ This step will create:
       * `frontend-project`: An ArgoCD application pointing to your frontend service's Helm chart in Git.
 
 These ArgoCD applications are configured to use `argocd-image-updater` for automated image updates, writing back to your Git repository.
-
+![alt text](images/argo4.png)
+![alt text](images/argo5.png)
+![alt text](images/argo6.png)
+![alt text](images/argo7.png)
 -----
 
 ## Post-Deployment
