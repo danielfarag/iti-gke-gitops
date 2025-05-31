@@ -10,7 +10,7 @@ resource "kubernetes_secret" "repo" {
   data = {
     name = "backend"
     type = "git"
-    url  = "git@github.com:danielfarag/iti-gke-gitops-capstone.git"
+    url  = "git@github.com:danielfarag/iti-gke-gitops.git"
     sshPrivateKey = var.github_privatekey
   }
 
