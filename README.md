@@ -1,4 +1,4 @@
-# Automated Infrastructure and Application Deployment on GCP using Terraform and CI/CD [ Github Actions / ArgoCD ]
+## Automated Infrastructure and Application Deployment on GCP using Terraform, Github Actions and ArgoCD
 
 This repository contains Terraform configurations for deploying a Google Kubernetes Engine (GKE) cluster, its supporting infrastructure (VPC, Cloud SQL, Artifact Registry), and essential applications (ArgoCD, ArgoCD Image Updater) using Helm. It also configures ArgoCD Applications for backend and frontend services.
 
