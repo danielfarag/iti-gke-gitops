@@ -2,7 +2,7 @@ replicaCount: 1
 name: deplyoment
 image:
   repository: us-central1-docker.pkg.dev/iti-gcp-course/docker/project1-backend-node
-  tag: latest
+  tag: f0c3f4f79ff1243a71d41b29508f622e7b5c3478
 service:
   name: backend-service
   type: ClusterIP
