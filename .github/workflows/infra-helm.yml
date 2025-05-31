@@ -1,0 +1,112 @@
+name: Infrastructure Helm Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action to perform'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/helm/**'
+jobs:
+  infra:
+    name: "Provision Infrastructure using Terraform"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Checkout infra branch
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+            terraform_version: 1.5.7
+
+      - name: Define TF Variables
+        run: |
+          cat > terraform/vars.tfvars <<EOF
+          project_id="${{ vars.project_id }}"
+          region="${{ vars.region }}"
+          cluster_name="${{ vars.cluster_name }}"
+          EOF
+        shell: bash
+
+      - name: Terraform Init
+        if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+        run: terraform -chdir=terraform/infra init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+        run: terraform -chdir=terraform/infra apply -var-file="../vars.tfvars" -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Destroy K8S
+        if: github.event.inputs.action == 'destroy'
+        run: terraform -chdir=terraform/k8s init; terraform -chdir=terraform/k8s destroy -var-file="../vars.tfvars"  -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Destroy helm
+        if: github.event.inputs.action == 'destroy'
+        run: terraform -chdir=terraform/helm init; terraform -chdir=terraform/helm destroy -var-file="../vars.tfvars"  -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Destroy infra
+        if: github.event.inputs.action == 'destroy'
+        run: terraform -chdir=terraform/infra init; terraform -chdir=terraform/infra destroy -var-file="../vars.tfvars"  -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+  helm:
+    runs-on: ubuntu-latest
+    needs: infra
+    steps:
+      - name: Clone Helm Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Define TF Variables
+        run: |
+          cat > terraform/vars.tfvars <<EOF
+          project_id="${{ vars.project_id }}"
+          region="${{ vars.region }}"
+          EOF
+        shell: bash
+
+      - name: Terraform Init
+        if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+        run: terraform -chdir=terraform/helm init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+        run: terraform -chdir=terraform/helm apply -var-file="../vars.tfvars" -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Destroy K8S
+        if: github.event.inputs.action == 'destroy'
+        run: terraform -chdir=terraform/k8s init; terraform -chdir=terraform/k8s destroy -var-file="../vars.tfvars"  -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Terraform Destroy helm
+        if: github.event.inputs.action == 'destroy'
+        run: terraform -chdir=terraform/helm init; terraform -chdir=terraform/helm destroy -var-file="../vars.tfvars"  -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
