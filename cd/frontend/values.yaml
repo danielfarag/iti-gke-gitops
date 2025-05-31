@@ -2,7 +2,7 @@ replicaCount: 1
 name: deplyoment
 image:
   repository: us-central1-docker.pkg.dev/iti-gcp-course/docker/project1-frontend-node
-  tag: latest
+  tag: 4860162783c059125ec86ea76753cf03bb51dd02
   nginx: nginx:latest
 service:
   backend:
