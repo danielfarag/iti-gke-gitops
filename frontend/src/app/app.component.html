@@ -1,0 +1,52 @@
+<!-- -->
+<main>
+  <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/angular.svg" alt="" width="180" height="57">
+    <h1 class="display-5 fw-bold">Posts</h1>
+
+
+    <div class="col-lg-6 mx-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr *ngFor="let post of posts">
+            <th scope="row">{{post.id}}</th>
+            <td>{{post.title}}</td>
+            <td>{{post.description}}</td>
+            <td>
+              <a class="btn btn-link" (click)="edit(post.id)">Edit</a>
+              <a class="btn btn-link" (click)="delete(post.id)">Delete</a>
+            </td>
+          </tr>
+        </tbody>
+      </table> 
+    </div>
+  </div>
+
+
+
+
+  <div class="px-4 py-5 my-5 text-center">
+    <div class="col-lg-4 mx-auto">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" [(ngModel)]="title" aria-describedby="titleHelp">
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" [(ngModel)]="description" aria-describedby="descriptionHelp"></textarea>
+      </div>
+      <button type="submit"  class="btn btn-primary" (click)="save()">Sve</button>
+      <button type="submit"  class="btn btn-info text-light mx-2" (click)="cancel()" *ngIf="id">Cancel</button>
+    </div>
+  </div>
+  
+</main>
