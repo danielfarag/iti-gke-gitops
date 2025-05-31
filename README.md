@@ -1,6 +1,7 @@
 ## Automated Infrastructure and Application Deployment on GCP using Terraform, Github Actions and ArgoCD
 
 This repository contains Terraform configurations for deploying a Google Kubernetes Engine (GKE) cluster, its supporting infrastructure (VPC, Cloud SQL, Artifact Registry), and essential applications (ArgoCD, ArgoCD Image Updater) using Helm. It also configures ArgoCD Applications for backend and frontend services.
+
 ![alt text](images/1.png)
 -----
 
@@ -22,11 +23,11 @@ Before you begin, ensure you have the following:
       * **Secrets:**
           * `GOOGLE_CREDENTIALS`: JSON key for a Google Cloud service account with permissions to manage your GCP resources (e.g., `roles/owner` for simplicity, but more granular roles are recommended for production).
           * `PRIVATE_KEY`: The SSH private key to access your private GitHub repository (used by ArgoCD).
+  ![alt text](images/github-vars-1.png) 
       * **Variables:**
           * `project_id`: Your Google Cloud project ID.
           * `region`: The Google Cloud region for resource deployment.
           * `cluster_name`: The name of your GKE cluster.
-  ![alt text](images/github-vars-1.png) 
   ![alt text](images/github-vars-2.png)
 -----
 ## GitHub Actions Workflows
@@ -145,6 +146,7 @@ This step will create:
       * `frontend-project`: An ArgoCD application pointing to your frontend service's Helm chart in Git.
 
 These ArgoCD applications are configured to use `argocd-image-updater` for automated image updates, writing back to your Git repository.
+
 ![alt text](images/argo4.png)
 ![alt text](images/argo5.png)
 ![alt text](images/argo6.png)
