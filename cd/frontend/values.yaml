@@ -1,0 +1,22 @@
+replicaCount: 1
+name: deplyoment
+image:
+  repository: us-central1-docker.pkg.dev/iti-gcp-course/docker/project1-frontend-node
+  tag: latest
+  nginx: nginx:latest
+service:
+  backend:
+    name: backend-service
+    port: 3000
+  frontend:
+    type: LoadBalancer
+    port: 80
+config:
+  name: nginx-config
+resources:
+  limits:
+    cpu: 50m
+    memory: 32Mi
+  requests:
+    cpu: 50m
+    memory: 32Mi

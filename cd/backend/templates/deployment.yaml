@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-node
+spec:
+  selector:
+    matchLabels:
+      app: backend-node
+  template:
+    metadata:
+      annotations:
+        secret.reloader.stakater.com/reload: {{ .Values.db_secret }} 
+      labels:
+        app: backend-node
+    spec:
+      containers:
+      - name: backend-node
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: {{ .Values.db_secret }} 
+      imagePullSecrets:
+      - name: my-gcr-secret

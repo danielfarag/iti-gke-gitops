@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-node
+spec:
+  selector:
+    matchLabels:
+      app: frontend-node
+  template:
+    metadata:
+      annotations:
+        configmap.reloader.stakater.com/reload: {{ .Values.config.name }} 
+      labels:
+        app: frontend-node
+    spec:
+      imagePullSecrets:
+      - name: my-gcr-secret
+      initContainers:
+      - name: frontend-node
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: ["sh", "-c"]
+        args: ["cp -r /app/* /project"]
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        volumeMounts:
+        - name: shared
+          mountPath: /project
+
+      containers:
+      - name: frontend-node-nginx
+        image: {{ .Values.image.nginx }}
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        volumeMounts:
+        - name: shared
+          mountPath: /usr/share/nginx/html
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+
+      volumes:
+      - name: shared
+        emptyDir: {}
+      - name: nginx-config
+        configMap:
+          name: nginx-config

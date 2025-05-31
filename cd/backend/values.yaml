@@ -1,0 +1,17 @@
+replicaCount: 1
+name: deplyoment
+image:
+  repository: us-central1-docker.pkg.dev/iti-gcp-course/docker/project1-backend-node
+  tag: latest
+service:
+  name: backend-service
+  type: ClusterIP
+  port: 3000
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+db_secret: db-credentials
